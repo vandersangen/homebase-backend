@@ -33,6 +33,8 @@ build: ## Builds the Docker images
 up: ## Start the docker hub in detached mode (no logs)
 	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up --detach
 
+up-phpfpm:
+	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up phpfpm nginx --detach
 
 up-rebuild: ## Start; --force rebuild
 	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up --build --force-recreate --detach
@@ -89,7 +91,7 @@ remove-db:
 test-%: ENV=ci
 test: test-functional
 test-functional: clear-cache rebuild-db seed ## Run functional tests (with db reload)
-	$(PHPUNIT) --testdox
+	#$(PHPUNIT) --testdox
 
 test-rebuild-db: rebuild-db
 

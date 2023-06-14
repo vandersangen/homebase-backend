@@ -1,4 +1,6 @@
 {
+    "name": "vandersangen/homebase-backend",
+    "description": "The backend of my homebase setup",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
