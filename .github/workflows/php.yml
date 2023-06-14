@@ -37,4 +37,5 @@ jobs:
 
     - name: Docker compose push
       run: |
+        docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         make docker-push-phpfpm
