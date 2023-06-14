@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+
+  backend:
+    image: "larsvandersangen/homebase-backend"
+    hostname: backend
+
+  frontend:
+    image: "larsvandersangen/homebase-frontend"
+    hostname: frontend
+    ports:
+      - "80:80"
