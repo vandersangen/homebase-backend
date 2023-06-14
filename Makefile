@@ -3,13 +3,14 @@ DOCKER = docker
 DOCKER_COMPOSE = docker compose
 
 # Docker containers
-PHP_CONTAINER = $(DOCKER_COMPOSE) exec backend
+PHP_CONTAINER = $(DOCKER_COMPOSE) exec -it phpfpm
 ANGULAR_CONTAINER = $(DOCKER_COMPOSE) exec frontend
 
 # Executables
-COMPOSER = $(DOCKER_COMPOSE) exec -it phpfpm composer
-CONSOLE = $(DOCKER_COMPOSE) exec -it phpfpm bin/console
-PHPUNIT = $(DOCKER_COMPOSE) exec -it phpfpm vendor/bin/phpunit
+COMPOSER =$(PHP_CONTAINER) composer
+CONSOLE = $(PHP_CONTAINER) bin/console
+PHPUNIT = $(PHP_CONTAINER) vendor/bin/phpunit
+
 NPM = $(DOCKER_COMPOSE) run frontend npm
 
 # Misc
@@ -65,7 +66,6 @@ vendor/composer/installed.json: composer.lock
 ## —— Composer 🧙 ———————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command
 	@$(eval c ?=)
-	up
 	@$(COMPOSER) $(c)
 
 console:
