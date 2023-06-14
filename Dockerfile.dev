@@ -72,7 +72,7 @@ RUN mkdir -p /var/www/homebase-backend
 
 ## Make sure you can run supervisord locally
 RUN mkdir -p /var/log/supervisor
-RUN ln -s /usr/local/bin/php /usr/bin/php7.4
+RUN ln -s /usr/local/bin/php /usr/bin/php8.2
 
 # Switch to use a non-root user from here on
 USER app
