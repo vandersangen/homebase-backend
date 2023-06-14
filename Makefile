@@ -7,11 +7,10 @@ PHP_CONTAINER = $(DOCKER_COMPOSE) exec backend
 ANGULAR_CONTAINER = $(DOCKER_COMPOSE) exec frontend
 
 # Executables
-COMPOSER = $(DOCKER) exec -it phpfpm composer
-CONSOLE = $(DOCKER) exec -it phpfpm bin/console
-PHPUNIT = $(DOCKER) exec -it phpfpm vendor/bin/phpunit
-
-YARN = $(DOCKER_COMPOSE) run frontend npm
+COMPOSER = $(DOCKER_COMPOSE) exec -it phpfpm composer
+CONSOLE = $(DOCKER_COMPOSE) exec -it phpfpm bin/console
+PHPUNIT = $(DOCKER_COMPOSE) exec -it phpfpm vendor/bin/phpunit
+NPM = $(DOCKER_COMPOSE) run frontend npm
 
 # Misc
 .DEFAULT_GOAL = help
@@ -25,17 +24,18 @@ ENV ?= dev
 help: ## Outputs this help screen
 	@grep -E '(^[a-zA-Z0-9_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}{printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
 
-setup: build frontend-install start seed
+setup: build start seed logs
 
 ## —— Docker 🐳 ————————————————————————————————————————————————————————————————
 build: ## Builds the Docker images
-	@$(DOCKER_COMPOSE) -vvv --env-file=.env -f ./docker-compose-dev.yaml up  --build
+	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml build
 
 up: ## Start the docker hub in detached mode (no logs)
-	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up
+	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up --detach
+
 
 up-rebuild: ## Start; --force rebuild
-	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up --build --force-recreate
+	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up --build --force-recreate --detach
 
 start: up install build-db ## Start the docker hub in detached mode (no logs)
 
@@ -45,7 +45,7 @@ down: ## Stop the docker hub
 	@$(DOCKER_COMPOSE) down --remove-orphans
 
 logs: ## Show live logs
-	@$(DOCKER_COMPOSE) logs --tail=0 --follow
+	@$(DOCKER_COMPOSE) logs --follow
 
 ps: ## Show the running containers
 	@$(DOCKER_COMPOSE) ps
@@ -63,6 +63,7 @@ vendor/composer/installed.json: composer.lock
 ## —— Composer 🧙 ———————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command
 	@$(eval c ?=)
+	up
 	@$(COMPOSER) $(c)
 
 console:
@@ -70,12 +71,12 @@ console:
 	@$(CONSOLE) $(c) --env=$(ENV)
 
 build-db: ## Build database
-	@$(CONSOLE) doctrine:database:create --if-not-exists --env=$(ENV)
-	@$(CONSOLE) doctrine:migrations:migrate -n --env=$(ENV)
-	@$(CONSOLE) messenger:setup-transports -n --env=$(ENV)
+#	@$(CONSOLE) doctrine:database:create --if-not-exists --env=$(ENV)
+#	@$(CONSOLE) doctrine:migrations:migrate -n --env=$(ENV)
+#	@$(CONSOLE) messenger:setup-transports -n --env=$(ENV)
 
 seed:
-	@$(CONSOLE) doctrine:fixtures:load -n --env=$(ENV)
+	@#$(CONSOLE) doctrine:fixtures:load -n --env=$(ENV)
 
 clear-cache:
 	@$(CONSOLE) cache:clear --env=$(ENV)
@@ -83,7 +84,7 @@ clear-cache:
 rebuild-db: remove-db build-db seed
 
 remove-db:
-	@$(CONSOLE) doctrine:database:drop --force --if-exists --env=$(ENV)
+	@#$(CONSOLE) doctrine:database:drop --force --if-exists --env=$(ENV)
 
 test-%: ENV=ci
 test: test-functional
@@ -113,3 +114,17 @@ xdebug-enable:
 xdebug-disable:
 	$(PHP_CONTAINER) sh ./docker/script/disable-xdebug.sh
 	$(DOCKER_COMPOSE) restart nginx phpfpm
+
+
+
+## —— Docker compose push 📦  ————————————————————————————————————————————————————————————————
+docker-push:
+	$(DOCKER) push larsvandersangen/homebase-frontend
+	$(DOCKER) push larsvandersangen/homebase-backend
+
+docker-push-dev:
+	$(DOCKER) push larsvandersangen/homebase-backend:dev-latest
+	$(DOCKER) push larsvandersangen/homebase-fontend:dev-latest
+
+docker-push-phpfpm:
+	$(DOCKER_COMPOSE) push phpfpm
