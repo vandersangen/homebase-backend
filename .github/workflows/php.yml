@@ -32,6 +32,7 @@ jobs:
     - name: Setup
       run: |
         make up-phpfpm
+        make install
         make test
       
 
