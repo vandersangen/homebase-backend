@@ -59,7 +59,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Add app user
 RUN adduser app \
     && mkdir -p /app /home/app/.composer \
-    && chown app /app /home/app/.composer
+    && chown app /app /home/app/.composer\
+    && usermod -a -G www-data app
 
 RUN wget https://get.symfony.com/cli/installer -O - | bash
 RUN mv ~/.symfony5/bin/symfony /usr/local/bin/symfony
@@ -68,9 +69,6 @@ RUN mv ~/.symfony5/bin/symfony /usr/local/bin/symfony
 ## Make sure you can run supervisord locally
 RUN mkdir -p /var/log/supervisor
 RUN ln -s /usr/local/bin/php /usr/bin/php8.2
-
-RUN chmod 775 /var/www \
-    && usermod -a -G www-data app
 
 # Switch to use a non-root user from here on
 USER app

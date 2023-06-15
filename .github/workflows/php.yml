@@ -32,8 +32,9 @@ jobs:
     - name: Setup
       run: |
         make up-phpfpm
-        chmod 755 -R ./
+        docker compose exec phpfpm chmod 755 -R ./
         docker compose exec phpfpm ls -ahl
+        docker compose exec phpfpm mkdir ./vendor
         docker compose exec phpfpm composer install
         make test
       
