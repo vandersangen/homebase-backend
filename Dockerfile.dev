@@ -64,11 +64,6 @@ RUN adduser app \
 RUN wget https://get.symfony.com/cli/installer -O - | bash
 RUN mv ~/.symfony5/bin/symfony /usr/local/bin/symfony
 
-# Set working directory
-WORKDIR /var/www/homebase-backend
-
-# Setup document root
-RUN mkdir -p /var/www/homebase-backend
 
 ## Make sure you can run supervisord locally
 RUN mkdir -p /var/log/supervisor
@@ -76,6 +71,13 @@ RUN ln -s /usr/local/bin/php /usr/bin/php8.2
 
 # Switch to use a non-root user from here on
 USER app
+
+# Set working directory
+WORKDIR /var/www/homebase-backend
+
+# Setup document root
+RUN mkdir -p /var/www/homebase-backend
+RUN chown app:app /var/www/homebase-backend
 
 # Expose the port nginx is reachable on
 EXPOSE 8080

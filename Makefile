@@ -37,7 +37,6 @@ up: ## Start the docker hub in detached mode (no logs)
 up-phpfpm:
 	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up phpfpm nginx --build --force-recreate --detach
 
-
 up-rebuild: ## Start; --force rebuild
 	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up --build --force-recreate --detach
 

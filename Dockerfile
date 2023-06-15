@@ -46,30 +46,23 @@ RUN docker-php-ext-install pdo_mysql mysqli
 #RUN docker-php-ext-install file_info
 #RUN docker-php-ext-install zlib # phpize
 
-# Add Redis (latest) and xdebug (latest)
-RUN pecl install redis xdebug && \
-    docker-php-ext-enable redis xdebug
-
-RUN chmod 666 /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-RUN echo ';zend_extension=xdebug.so' > '/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini'
-
 # Install compose & packages
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Set working directory
+WORKDIR /var/www/homebase-backend
+RUN mkdir -p /var/www/homebase-backend
 
 # Add app user
 RUN adduser app \
     && mkdir -p /app /home/app/.composer \
     && chown app /app /home/app/.composer
+RUN chown app:app /var/www/homebase-backend
 
 RUN wget https://get.symfony.com/cli/installer -O - | bash
 RUN mv ~/.symfony5/bin/symfony /usr/local/bin/symfony
 
-
-# Set working directory
-WORKDIR /var/www/homebase-backend
-
-# Setup document root
-RUN mkdir -p /var/www/homebase-backend
+COPY . /var/www/homebase-backend
 
 ## Make sure you can run supervisord locally
 RUN mkdir -p /var/log/supervisor
