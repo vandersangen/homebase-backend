@@ -57,7 +57,7 @@ RUN echo ';zend_extension=xdebug.so' > '/usr/local/etc/php/conf.d/docker-php-ext
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Add app user
-RUN adduser app \
+RUN adduser -u 1001 app \
     && mkdir -p /app /home/app/.composer \
     && chown app /app /home/app/.composer\
     && usermod -a -G www-data app
