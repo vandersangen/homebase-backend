@@ -31,7 +31,8 @@ jobs:
 
     - name: Setup
       run: |
-        UID=${UID} GID=${GID} make up-phpfpm
+        make up-phpfpm
+        docker compose -f ./docker-compose-dev.yaml run phpfpm id
         docker compose exec phpfpm mkdir ./vendor
         docker compose exec phpfpm ls -ahl        
         docker compose exec phpfpm composer install
