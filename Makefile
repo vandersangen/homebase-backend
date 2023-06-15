@@ -131,7 +131,7 @@ docker-push-dev:
 	$(DOCKER) push larsvandersangen/homebase-fontend:dev-latest
 
 docker-push-phpfpm:
-	$(DOCKER) push larsvandersangen/homebase-backend
+	$(DOCKER) push larsvandersangen/homebase-backend:latest
 
 docker-push-phpfpm-dev:
 	$(DOCKER) push larsvandersangen/homebase-backend:dev-latest
