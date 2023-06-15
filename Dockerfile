@@ -54,13 +54,14 @@ RUN adduser app \
     && mkdir -p /app /home/app/.composer \
     && chown app /app /home/app/.composer
 
-# Set working directory
-WORKDIR /var/www/homebase-backend
 
 # Setup document root
 RUN mkdir -p /var/www/homebase-backend \
     && chown app:app /var/www/homebase-backend \
-    && chmod -R 774 /var/www/homebase-backend
+    && chmod -R 774 /var/www/ \
+
+# Set working directory
+WORKDIR /var/www/homebase-backend
 
 RUN wget https://get.symfony.com/cli/installer -O - | bash
 RUN mv ~/.symfony5/bin/symfony /usr/local/bin/symfony
