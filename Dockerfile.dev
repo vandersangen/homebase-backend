@@ -76,9 +76,9 @@ USER app
 WORKDIR /var/www/homebase-backend
 
 # Setup document root
-RUN mkdir -p /var/www/homebase-backend
-RUN chown app:app /var/www/homebase-backend
-
+RUN mkdir -p /var/www/homebase-backend \
+    && chown app:app /var/www/homebase-backend \
+    && chmod -R 774 /var/www/homebase-backend
 # Expose the port nginx is reachable on
 EXPOSE 8080
 

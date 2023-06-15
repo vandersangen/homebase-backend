@@ -49,15 +49,18 @@ RUN docker-php-ext-install pdo_mysql mysqli
 # Install compose & packages
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Set working directory
-WORKDIR /var/www/homebase-backend
-RUN mkdir -p /var/www/homebase-backend
-
 # Add app user
 RUN adduser app \
     && mkdir -p /app /home/app/.composer \
     && chown app /app /home/app/.composer
-RUN chown app:app /var/www/homebase-backend
+
+# Set working directory
+WORKDIR /var/www/homebase-backend
+
+# Setup document root
+RUN mkdir -p /var/www/homebase-backend \
+    && chown app:app /var/www/homebase-backend \
+    && chmod -R 774 /var/www/homebase-backend
 
 RUN wget https://get.symfony.com/cli/installer -O - | bash
 RUN mv ~/.symfony5/bin/symfony /usr/local/bin/symfony
