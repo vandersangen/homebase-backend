@@ -34,7 +34,11 @@ build: ## Builds the Docker images
 up: ## Start the docker hub in detached mode (no logs)
 	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up --detach
 
+
 up-phpfpm:
+	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up phpfpm nginx --build --force-recreate --detach
+
+up-phpfpm-dev:
 	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up phpfpm nginx --build --force-recreate --detach
 
 up-rebuild: ## Start; --force rebuild
@@ -117,8 +121,6 @@ xdebug-disable:
 	$(PHP_CONTAINER) sh ./docker/script/disable-xdebug.sh
 	$(DOCKER_COMPOSE) restart nginx phpfpm
 
-
-
 ## —— Docker compose push 📦  ————————————————————————————————————————————————————————————————
 docker-push:
 	$(DOCKER) push larsvandersangen/homebase-frontend
@@ -129,4 +131,20 @@ docker-push-dev:
 	$(DOCKER) push larsvandersangen/homebase-fontend:dev-latest
 
 docker-push-phpfpm:
+	$(DOCKER) push larsvandersangen/homebase-backend:latest
+
+docker-push-phpfpm-dev:
 	$(DOCKER) push larsvandersangen/homebase-backend:dev-latest
+
+
+
+## —— Kubernetes  🐙  ————————————————————————————————————————————————————————————————
+k8s-deploy-dev:
+	kubectl apply -f ./k8s/ingress-dev
+	kubectl apply -f ./k8s/homebase-backend-phpfpm
+
+k8s-deploy-test:
+	kubectl apply -f ./k8s/homebase-backend-phpfpm
+	kubectl apply -f ./k8s/ingress-test
+	kubectl apply -f ./k8s/certmanager-test
+

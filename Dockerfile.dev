@@ -55,16 +55,14 @@ RUN echo ';zend_extension=xdebug.so' > '/usr/local/etc/php/conf.d/docker-php-ext
 
 # Install compose & packages
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN wget https://get.symfony.com/cli/installer -O - | bash
+RUN mv ~/.symfony5/bin/symfony /usr/local/bin/symfony
 
 # Add app user
 RUN adduser -u 1001 app \
     && mkdir -p /app /home/app/.composer \
     && chown app /app /home/app/.composer\
     && usermod -a -G www-data app
-
-RUN wget https://get.symfony.com/cli/installer -O - | bash
-RUN mv ~/.symfony5/bin/symfony /usr/local/bin/symfony
-
 
 ## Make sure you can run supervisord locally
 RUN mkdir -p /var/log/supervisor

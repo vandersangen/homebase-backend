@@ -50,23 +50,10 @@ RUN docker-php-ext-install pdo_mysql mysqli
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Add app user
-RUN adduser app \
+RUN adduser -u 1001 app \
     && mkdir -p /app /home/app/.composer \
-    && chown app /app /home/app/.composer
-
-
-# Setup document root
-RUN mkdir -p /var/www/homebase-backend \
-    && chown app:app /var/www/homebase-backend \
-    && chmod -R 774 /var/www/ \
-
-# Set working directory
-WORKDIR /var/www/homebase-backend
-
-RUN wget https://get.symfony.com/cli/installer -O - | bash
-RUN mv ~/.symfony5/bin/symfony /usr/local/bin/symfony
-
-COPY . /var/www/homebase-backend
+    && chown app /app /home/app/.composer\
+    && usermod -a -G www-data app
 
 ## Make sure you can run supervisord locally
 RUN mkdir -p /var/log/supervisor
@@ -74,6 +61,16 @@ RUN ln -s /usr/local/bin/php /usr/bin/php8.2
 
 # Switch to use a non-root user from here on
 USER app
+
+# Set working directory
+WORKDIR /var/www/homebase-backend
+
+# Setup document root
+RUN mkdir -p /var/www/homebase-backend \
+    && chown app:app /var/www/homebase-backend \
+    && chmod -R 774 /var/www/homebase-backend
+
+COPY ./ ./
 
 # Expose the port nginx is reachable on
 EXPOSE 8080
