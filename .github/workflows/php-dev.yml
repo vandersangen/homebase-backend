@@ -1,19 +1,18 @@
-name: Build, test and push
+name: Build, test and push - dev
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "development" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "development" ]
 
 permissions:
   contents: read
 
 jobs:
+
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
 
@@ -31,15 +30,11 @@ jobs:
 
     - name: Setup
       run: |
-        make up-phpfpm
-        docker compose -f ./docker-compose-dev.yaml run phpfpm id
-        docker compose exec phpfpm mkdir ./vendor
-        docker compose exec phpfpm ls -ahl        
-        docker compose exec phpfpm composer install
+        make up-phpfpm-dev
+        make install
         make test
-
 
     - name: Docker compose push
       run: |
         docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        make docker-push-phpfpm
+        make docker-push-phpfpm-dev
