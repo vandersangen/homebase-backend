@@ -74,6 +74,8 @@ RUN chmod 775 /var/www
 # Switch to use a non-root user from here on
 USER app
 
+RUN usermod -a -G www-data `whoami`
+
 # Set working directory
 WORKDIR /var/www/homebase-backend
 
