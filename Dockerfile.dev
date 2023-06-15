@@ -69,8 +69,7 @@ RUN mv ~/.symfony5/bin/symfony /usr/local/bin/symfony
 RUN mkdir -p /var/log/supervisor
 RUN ln -s /usr/local/bin/php /usr/bin/php8.2
 
-
-RUN chmod 774 /var/www
+RUN chmod 775 /var/www
 
 # Switch to use a non-root user from here on
 USER app
