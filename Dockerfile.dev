@@ -72,13 +72,14 @@ RUN ln -s /usr/local/bin/php /usr/bin/php8.2
 # Switch to use a non-root user from here on
 USER app
 
-# Set working directory
-WORKDIR /var/www/homebase-backend
-
 # Setup document root
 RUN mkdir -p /var/www/homebase-backend \
     && chown app:app /var/www/homebase-backend \
-    && chmod -R 774 /var/www/homebase-backend
+    && chmod -R 774 /var/www/
+
+# Set working directory
+WORKDIR /var/www/homebase-backend
+
 # Expose the port nginx is reachable on
 EXPOSE 8080
 
