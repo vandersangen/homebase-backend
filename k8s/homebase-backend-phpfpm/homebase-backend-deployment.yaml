@@ -19,6 +19,7 @@ spec:
       initContainers:
         - name: phpfpm-nginx-init
           image: larsvandersangen/homebase-backend:latest
+          imagePullPolicy: Always
           volumeMounts:
             - mountPath: /volume
               name: shared-data
@@ -40,7 +41,7 @@ spec:
 
         - name: homebase-backend-phpfpm
           image: larsvandersangen/homebase-backend:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 9000
           volumeMounts:
