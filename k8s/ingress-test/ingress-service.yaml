@@ -4,7 +4,7 @@ kind: Ingress
 metadata:
   name: api-homebase-ingress-service-test
   annotations:
-    kubernetes.io/ingress.class: 'nginx'
+    kubernetes.io/ingress.class: 'public'
 
     nginx.ingress.kubernetes.io/use-regex: 'true'
     nginx.ingress.kubernetes.io/rewrite-target: /$1
@@ -17,7 +17,7 @@ spec:
   tls:
     - hosts:
         - test.api.homebase.vandersangen.dev
-      secretName: test-api-homebase-vandersangen-dev
+      secretName: test.api.homebase.vandersangen.dev
   rules:
     - host: test.api.homebase.vandersangen.dev
       http:
