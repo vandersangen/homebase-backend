@@ -38,3 +38,15 @@ jobs:
       run: |
         docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         make docker-push-phpfpm
+        
+    - name: kubectl-set
+      uses: qgxpagamentos/kubectl-set@v1
+      with:
+        # A base64 encoded reference to your authorization file (~/.kube/config)
+        base64-kube-config: ${{ secrets.K8S_KUBE_CONFIG }}
+        
+
+    - name: Deploy to k8s
+      run: |
+        export export K8S_NAMESPACE='{{ secrets.K8S_PROD_NAMESPACE}}' 
+        make k8s-deploy-prod
