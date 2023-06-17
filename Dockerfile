@@ -70,9 +70,7 @@ RUN mkdir -p /var/www/homebase-backend \
     && chmod -R 774 /var/www/homebase-backend \
     && chown app:app /var/www/homebase-backend
 
-COPY ./ ./
-
-RUN ls -ahl
+COPY --chown=app:app ./ ./
 
 # Expose the port nginx is reachable on
 EXPOSE 8080
