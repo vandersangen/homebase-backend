@@ -72,6 +72,8 @@ RUN mkdir -p /var/www/homebase-backend \
 
 COPY ./ ./
 
+RUN ls -ahl
+
 # Expose the port nginx is reachable on
 EXPOSE 8080
 
