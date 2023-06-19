@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ApiController extends AbstractController
 {
-    #[Route('/api/socials', name: 'app_dummy_api')]
+    #[Route('/api/socials', name: 'app_api_socials')]
     public function index(): JsonResponse
     {
         return $this->json([
@@ -25,6 +25,10 @@ class ApiController extends AbstractController
             [
                 'name' => 'Email',
                 'href' => 'mailto:lars@vandersangen.dev',
+            ],
+            [
+                'name' => 'WhatsApp',
+                'href' => 'https://wa.me/31611858342',
             ]
         ]);
     }
