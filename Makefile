@@ -65,7 +65,7 @@ angular-login: ## Connect to the frontend container with bash
 
 vendor/composer/installed.json: composer.lock
 	$(COMPOSER) install -vvv
-	touch $@
+	$(PHP_CONTAINER) touch $@
 
 ## —— Composer 🧙 ———————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command
