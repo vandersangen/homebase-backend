@@ -150,7 +150,7 @@ k8s-deploy-test:
 
 
 k8s-deploy-prod:
-	kubectl apply -f ./k8s/homebasxe-backend-phpfpm -n $(K8S_NAMESPACE)
+	kubectl apply -f ./k8s/homebase-backend-phpfpm -n $(K8S_NAMESPACE)
 	kubectl apply -f ./k8s/ingress-prod -n $(K8S_NAMESPACE)
 	kubectl apply -f ./k8s/certmanager-prod -n $(K8S_NAMESPACE)
 
