@@ -152,6 +152,8 @@ k8s-deploy-dev:
 
 k8s-deploy-test:
 	kubectl apply -f ./k8s/homebase-backend-phpfpm-test -n $(K8S_NAMESPACE)
+	# Enforce restart for the pods
+	kubectl rollout restart -f ./k8s/homebase-backend-phpfpm-test -n $(K8S_NAMESPACE)
 	kubectl apply -f ./k8s/ingress-test -n $(K8S_NAMESPACE)
 	kubectl apply -f ./k8s/certmanager-test -n $(K8S_NAMESPACE)
 
