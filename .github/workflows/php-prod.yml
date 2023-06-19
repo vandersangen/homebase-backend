@@ -31,8 +31,12 @@ jobs:
 
       - name: Setup
         run: |
+          touch .env.local
+          echo APP_ENV=$APP_ENV >> .env.local
           make up-phpfpm
           make test
+        env:
+          APP_ENV: prod
 
       - name: Docker compose push
         run: |
