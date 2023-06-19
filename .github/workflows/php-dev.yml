@@ -31,14 +31,14 @@ jobs:
 
       - name: Setup
         run: |
-          make up-phpfpm-dev
+          make up-phpfpm-test
           make install
           make test
 
       - name: Docker compose push
         run: |
           docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          make docker-push-phpfpm-dev
+          make docker-push-phpfpm-test
 
       - name: kubectl-set
         uses: qgxpagamentos/kubectl-set@v1
