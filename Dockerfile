@@ -72,7 +72,9 @@ RUN mkdir -p /var/www/homebase-backend \
 
 COPY --chown=app:app ./ ./
 
-RUN ls -ahl
+RUN composer.phar install --no-ansi \
+    --no-dev --no-interaction --no-progress \
+    --optimize-autoloader
 
 # Expose the port nginx is reachable on
 EXPOSE 8080

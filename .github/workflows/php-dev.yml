@@ -31,7 +31,6 @@ jobs:
       - name: Setup
         run: |
           make up-phpfpm-test
-          make install
           make test
 
       - name: Docker compose push
