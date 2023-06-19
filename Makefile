@@ -34,7 +34,6 @@ build: ## Builds the Docker images
 up: ## Start the docker hub in detached mode (no logs)
 	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up --detach
 
-
 up-phpfpm:
 	@$(DOCKER_COMPOSE) up phpfpm nginx --build --force-recreate --detach
 
@@ -133,21 +132,18 @@ docker-push-dev:
 	$(DOCKER) push larsvandersangen/homebase-backend:dev-latest
 	$(DOCKER) push larsvandersangen/homebase-fontend:dev-latest
 
-
 docker-push-test:
 	$(DOCKER) push larsvandersangen/homebase-backend:test-latest
 	$(DOCKER) push larsvandersangen/homebase-fontend:test-latest
 
-docker-push-phpfpm-test:
-	$(DOCKER) push larsvandersangen/homebase-backend:test-latest
-
 docker-push-phpfpm:
 	$(DOCKER) push larsvandersangen/homebase-backend
 
+docker-push-phpfpm-test:
+	$(DOCKER) push larsvandersangen/homebase-backend:test-latest
+
 docker-push-phpfpm-dev:
 	$(DOCKER) push larsvandersangen/homebase-backend:dev-latest
-
-
 
 ## —— Kubernetes  🐙  ————————————————————————————————————————————————————————————————
 k8s-deploy-dev:
@@ -159,9 +155,7 @@ k8s-deploy-test:
 	kubectl apply -f ./k8s/ingress-test -n $(K8S_NAMESPACE)
 	kubectl apply -f ./k8s/certmanager-test -n $(K8S_NAMESPACE)
 
-
 k8s-deploy-prod:
 	kubectl apply -f ./k8s/homebase-backend-phpfpm-prod -n $(K8S_NAMESPACE)
 	kubectl apply -f ./k8s/ingress-prod -n $(K8S_NAMESPACE)
 	kubectl apply -f ./k8s/certmanager-prod -n $(K8S_NAMESPACE)
-

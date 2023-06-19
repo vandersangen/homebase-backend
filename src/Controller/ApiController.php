@@ -29,6 +29,7 @@ class ApiController extends AbstractController
             [
                 'name' => 'WhatsApp',
                 'href' => 'https://wa.me/31611858342',
+                'title' => 'Dummy title',
             ]
         ]);
     }
