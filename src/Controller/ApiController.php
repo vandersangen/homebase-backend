@@ -25,6 +25,10 @@ class ApiController extends AbstractController
             [
                 'name' => 'Email',
                 'href' => 'mailto:lars@vandersangen.dev',
+            ],
+            [
+                'name' => 'other social',
+                'href' => 'https://google.com'
             ]
         ]);
     }
