@@ -36,7 +36,7 @@ jobs:
           make up-phpfpm-test
           make test
         env:
-          - APP_ENV: prod
+          APP_ENV: prod
 
 
       - name: Docker compose push
