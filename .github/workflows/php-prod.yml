@@ -3,8 +3,6 @@ name: Build, test and push - prod
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 permissions:
   contents: read
@@ -14,41 +12,44 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Validate composer.json and composer.lock
-      run: composer validate --strict
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
 
-#    - name: Cache Composer packages
-#      id: composer-cache
-#      uses: actions/cache@v3
-#      with:
-#        path: vendor
-#        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-#        restore-keys: |
-#          ${{ runner.os }}-php-
-          
+          #    - name: Cache Composer packages
+          #      id: composer-cache
+          #      uses: actions/cache@v3
+          #      with:
+          #        path: vendor
+          #        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          #        restore-keys: |
+          #          ${{ runner.os }}-php-
 
-    - name: Setup
-      run: |
-        make up-phpfpm
-        make install
-        make test
 
-    - name: Docker compose push
-      run: |
-        docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        make docker-push-phpfpm
-        
-    - name: kubectl-set
-      uses: qgxpagamentos/kubectl-set@v1
-      with:
-        # A base64 encoded reference to your authorization file (~/.kube/config)
-        base64-kube-config: ${{ secrets.K8S_KUBE_CONFIG }}
-        
+      - name: Setup
+        run: |
+          touch .env.local
+          echo APP_ENV=$APP_ENV >> .env.local
+          make up-phpfpm
+          make test
+        env:
+          APP_ENV: prod
 
-    - name: Deploy to k8s
-      run: | 
-        make k8s-deploy-prod
-      env:
-        K8S_NAMESPACE: ${{secrets.K8S_PROD_NAMESPACE}}
+      - name: Docker compose push
+        run: |
+          docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          make docker-push-phpfpm
+
+      - name: kubectl-set
+        uses: qgxpagamentos/kubectl-set@v1
+        with:
+          # A base64 encoded reference to your authorization file (~/.kube/config)
+          base64-kube-config: ${{ secrets.K8S_KUBE_CONFIG }}
+
+
+      - name: Deploy to k8s
+        run: |
+          make k8s-deploy-prod
+        env:
+          K8S_NAMESPACE: ${{secrets.K8S_PROD_NAMESPACE}}

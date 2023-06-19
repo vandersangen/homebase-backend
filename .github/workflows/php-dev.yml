@@ -2,9 +2,7 @@ name: Build, test and push - dev
 
 on:
   push:
-    branches: [ "development" ]
-  pull_request:
-    branches: [ "development" ]
+    branches-ignore: ['main']
 
 permissions:
   contents: read
@@ -14,27 +12,46 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Validate composer.json and composer.lock
-      run: composer validate --strict
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
 
-#    - name: Cache Composer packages
-#      id: composer-cache
-#      uses: actions/cache@v3
-#      with:
-#        path: vendor
-#        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-#        restore-keys: |
-#          ${{ runner.os }}-php-
+          #    - name: Cache Composer packages
+          #      id: composer-cache
+          #      uses: actions/cache@v3
+          #      with:
+          #        path: vendor
+          #        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          #        restore-keys: |
+          #          ${{ runner.os }}-php-
 
-    - name: Setup
-      run: |
-        make up-phpfpm-dev
-        make install
-        make test
+      - name: Setup
+        run: |
+          touch .env.local
+          echo APP_ENV=$APP_ENV >> .env.local
+          make up-phpfpm-test
+          make test
+        env:
+          APP_ENV: prod
 
-    - name: Docker compose push
-      run: |
-        docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        make docker-push-phpfpm-dev
+
+      - name: Docker compose push
+        if: github.ref == 'refs/heads/development'
+        run: |
+          docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          make docker-push-phpfpm-test
+
+      - name: Set k8s kubeconfig file
+        if: github.ref == 'refs/heads/development'
+        uses: qgxpagamentos/kubectl-set@v1
+        with:
+          # A base64 encoded reference to your authorization file (~/.kube/config)
+          base64-kube-config: ${{ secrets.K8S_KUBE_CONFIG }}
+
+      - name: Deploy to k8s
+        if: github.ref == 'refs/heads/development'
+        run: |
+          make k8s-deploy-test
+        env:
+          K8S_NAMESPACE: ${{secrets.K8S_TEST_NAMESPACE}}

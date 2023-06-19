@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homebase-backend-deployment
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      folder: homebase-backend-phpfpm
+  template:
+    metadata:
+      labels:
+        folder: homebase-backend-phpfpm
+
+    spec:
+      restartPolicy: Always
+
+      initContainers:
+        - name: phpfpm-nginx-init
+          image: larsvandersangen/homebase-backend:test-latest
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /volume
+              name: shared-data
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - "cp -r /var/www/homebase-backend /volume/html; chmod 777 -R /volume/html"
+
+      volumes:
+        - name: shared-data
+          emptyDir: {}
+
+        - name: nginx-configmap-defaultconf
+          configMap:
+            name: nginx-configmap-defaultconf
+
+      containers:
+
+        - name: homebase-backend-phpfpm
+          image: larsvandersangen/homebase-backend:test-latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+          volumeMounts:
+            - mountPath: /var/www
+              name: shared-data
+
+        - name: homebase-backend-nginx
+          image: nginx:alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /var/www
+              name: shared-data
+
+            - name: nginx-configmap-defaultconf
+              mountPath: /etc/nginx/conf.d
