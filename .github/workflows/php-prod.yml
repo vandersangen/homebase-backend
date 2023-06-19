@@ -49,5 +49,5 @@ jobs:
 
     - name: Deploy to k8s
       run: |
-        export export K8S_NAMESPACE='{{ secrets.K8S_PROD_NAMESPACE}}' 
+        export K8S_NAMESPACE={{ secrets.K8S_PROD_NAMESPACE}} 
         make k8s-deploy-prod
