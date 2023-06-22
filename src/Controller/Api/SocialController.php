@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ApiController extends AbstractController
+final class SocialController extends AbstractController
 {
     #[Route('/api/socials', name: 'app_api_socials')]
     public function index(): JsonResponse
@@ -35,13 +35,5 @@ class ApiController extends AbstractController
                 'target' => '_blank',
             ]
         ]);
-    }
-
-    #[Route('/api/introduction', name: 'app_api_introduction')]
-    public function introduction(): JsonResponse
-    {
-        return $this->json(
-            'Hallo, welkom! Kijk gerust even wat je nodig hebt hier 👨‍💻'
-        );
     }
 }
