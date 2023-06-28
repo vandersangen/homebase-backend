@@ -28,12 +28,12 @@ jobs:
 
       - name: Setup and test
         run: |
+          make up-phpfpm-test
+          make test
+          
           touch .env.local
           echo APP_ENV=$APP_ENV >> .env.local
           echo DATABASE_URL=$DATABASE_URL_TEST >> .env.local
-          
-          make up-phpfpm-test
-          make test
         env:
           APP_ENV: prod
 
