@@ -35,13 +35,13 @@ up: ## Start the docker hub in detached mode (no logs)
 	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up --detach
 
 up-phpfpm:
-	@$(DOCKER_COMPOSE) up phpfpm nginx database --build --force-recreate --detach
+	@$(DOCKER_COMPOSE) up database phpfpm nginx --build --force-recreate --detach
 
 up-phpfpm-test:
-	@$(DOCKER_COMPOSE) -f ./docker-compose-test.yaml up phpfpm nginx database --build --force-recreate --detach
+	@$(DOCKER_COMPOSE) -f ./docker-compose-test.yaml up database phpfpm nginx --build --force-recreate --detach
 
 up-phpfpm-dev:
-	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up phpfpm nginx database --build --force-recreate --detach
+	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up database phpfpm nginx --build --force-recreate --detach
 
 up-rebuild: ## Start; --force rebuild
 	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up --build --force-recreate --detach

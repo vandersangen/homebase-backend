@@ -5,6 +5,8 @@ services:
   phpfpm:
     image: larsvandersangen/homebase-backend:test-latest
     platform: linux/amd64
+    depends_on:
+      - database
     build:
       context: .
       target: dev
