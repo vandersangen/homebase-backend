@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: homebase-backend-migrations
+  labels:
+    purpose: run-migrations
+    folder: homebase-backend-phpfpm
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        folder: homebase-backend-phpfpm
+    spec:
+      imagePullSecrets:
+        - name: regcred
+
+      restartPolicy: Never
+
+      containers:
+        - name: migrations
+          image: larsvandersangen/homebase-backend:test-latest
+          imagePullPolicy: Always
+          command:
+            - /bin/sh
+            - -c
+          args:
+            - "/var/www/homebase-backend/bin/console doctrine:migrations:migrate -n && make seed"

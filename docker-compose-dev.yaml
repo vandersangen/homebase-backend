@@ -16,6 +16,7 @@ services:
       SERVICE_TAGS: dev
     volumes:
       - ./:/var/www/homebase-backend
+      - ./docker/config/php.ini:/usr/local/etc/php/conf.d/php.ini
     expose:
       - "9000"
       - "9003"
@@ -48,7 +49,7 @@ services:
       SHELL: /bin/bash
       NODE_ENV: development
     networks:
-      - app-network-frontend
+      - app-network
     entrypoint: ng serve --host 0.0.0.0 --configuration=development
     env_file:
       - .env
@@ -56,8 +57,35 @@ services:
   redis:
     image: "redis:latest"
 
+
+  ###> doctrine/doctrine-bundle ###
+  database:
+    image: mysql:8.0.33
+    networks:
+      - app-network
+    environment:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: homebase-dev
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - database_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+      - "33060:33060"
+    expose:
+      - 3306
+      - 33060
+  ###< doctrine/doctrine-bundle ###
+
 # Docker Networks
 networks:
   app-network:
     name: app-network
     driver: bridge
+
+
+volumes:
+  ###> doctrine/doctrine-bundle ###
+  database_data:
+###< doctrine/doctrine-bundle ###

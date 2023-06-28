@@ -49,6 +49,7 @@ services:
     image: "redis:latest"
 
 # Docker Networks
+
 networks:
   app-network:
     name: app-network

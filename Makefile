@@ -79,12 +79,12 @@ console:
 	@$(CONSOLE) $(c) --env=$(ENV)
 
 build-db: ## Build database
-#	@$(CONSOLE) doctrine:database:create --if-not-exists --env=$(ENV)
-#	@$(CONSOLE) doctrine:migrations:migrate -n --env=$(ENV)
-#	@$(CONSOLE) messenger:setup-transports -n --env=$(ENV)
+	@$(CONSOLE) doctrine:database:create --if-not-exists --env=$(ENV)
+	@$(CONSOLE) doctrine:migrations:migrate -n --env=$(ENV)
+	@#$(CONSOLE) messenger:setup-transports -n --env=$(ENV)
 
 seed:
-	@#$(CONSOLE) doctrine:fixtures:load -n --env=$(ENV)
+	@$(CONSOLE) doctrine:fixtures:load -n --env=$(ENV)
 
 clear-cache:
 	@$(CONSOLE) cache:clear --env=$(ENV)
@@ -151,6 +151,7 @@ k8s-deploy-dev:
 	kubectl apply -f ./k8s/homebase-backend-phpfpm
 
 k8s-deploy-test:
+	-kubectl delete -f ./k8s/homebase-backend-phpfpm-test/homebase-backend-migration.yaml -n $(K8S_NAMESPACE)
 	kubectl apply -f ./k8s/homebase-backend-phpfpm-test -n $(K8S_NAMESPACE)
 	# Enforce restart for the pods
 	kubectl rollout restart -f ./k8s/homebase-backend-phpfpm-test/homebase-backend-deployment.yaml -n $(K8S_NAMESPACE)
