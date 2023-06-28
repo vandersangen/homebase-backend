@@ -86,6 +86,6 @@ networks:
 
 
 volumes:
-  ###> doctrine/doctrine-bundle ###
+###> doctrine/doctrine-bundle ###
   database_data:
 ###< doctrine/doctrine-bundle ###

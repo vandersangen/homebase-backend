@@ -73,3 +73,9 @@ networks:
   app-network:
     name: app-network
     driver: bridge
+
+
+volumes:
+  ###> doctrine/doctrine-bundle ###
+  database_data:
+###< doctrine/doctrine-bundle ###
