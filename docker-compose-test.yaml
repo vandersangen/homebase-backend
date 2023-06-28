@@ -43,6 +43,27 @@ services:
       NODE_ENV: development
     entrypoint: ng serve --host 0.0.0.0 --poll 1
 
+
+  ###> doctrine/doctrine-bundle ###
+  database:
+    image: mysql:8.0.33
+    networks:
+      - app-network
+    environment:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: homebase-dev
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - database_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+      - "33060:33060"
+    expose:
+      - 3306
+      - 33060
+  ###< doctrine/doctrine-bundle ###
+
   redis:
     image: "redis:latest"
 
