@@ -105,8 +105,7 @@ remove-db:
 
 test-%: ENV=dev
 test: test-functional
-#test-functional: clear-cache rebuild-db seed ## Run functional tests (with db reload)
-test-functional: clear-cache seed ## Run functional tests (with db reload)
+test-functional: clear-cache rebuild-db seed ## Run functional tests (with db reload)
 	#$(PHPUNIT) --testdox
 
 test-rebuild-db: rebuild-db
