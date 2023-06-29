@@ -40,6 +40,14 @@ jobs:
         env:
           APP_ENV: prod
 
+      - name: Prepare artifact
+        run: |
+          echo DATABASE_URL=$DATABASE_URL_PROD >> .env.local
+          make up-phpfpm
+
+        env:
+          APP_ENV: prod
+
       - name: Docker compose push
         run: |
           docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
