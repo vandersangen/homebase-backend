@@ -7,7 +7,8 @@ services:
     platform: linux/amd64
     depends_on:
       database:
-        condition: service_completed_successfully
+#        condition: service_completed_successfully
+        condition: service_healthy
     build:
       context: .
       target: dev
