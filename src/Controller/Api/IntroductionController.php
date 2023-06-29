@@ -8,11 +8,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ProjectController extends AbstractController
+final class IntroductionController extends AbstractController
 {
-    #[Route('/api/projects', name: 'app_api_projects')]
+    #[Route('/api/introduction', name: 'app_api_introduction')]
     public function introduction(): JsonResponse
     {
-        return $this->json([]);
+        return $this->json('Hallo, welkom! Kijk gerust even wat je nodig hebt hier 👨‍💻');
     }
 }

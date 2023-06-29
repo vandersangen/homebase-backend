@@ -17,27 +17,24 @@ jobs:
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
 
-#      - name: Cache Composer packages
-#        id: composer-cache
-#        uses: actions/cache@v3
-#        with:
-#          path: vendor
-#          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-#          restore-keys: |
-#            ${{ runner.os }}-php-
+          #    - name: Cache Composer packages
+          #      id: composer-cache
+          #      uses: actions/cache@v3
+          #      with:
+          #        path: vendor
+          #        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          #        restore-keys: |
+          #          ${{ runner.os }}-php-
 
-      - name: Setup and test
+      - name: Setup
         run: |
           touch .env.local
           echo APP_ENV=$APP_ENV >> .env.local
-          
-          make up-database-test
           make up-phpfpm-test
           make test
-          
-          echo DATABASE_URL=$DATABASE_URL_TEST >> .env.local
         env:
           APP_ENV: prod
+
 
       - name: Docker compose push
         if: github.ref == 'refs/heads/development'

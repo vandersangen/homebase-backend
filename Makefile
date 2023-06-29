@@ -46,15 +46,6 @@ up-phpfpm-dev:
 up-rebuild: ## Start; --force rebuild
 	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up --build --force-recreate --detach
 
-up-database:
-	@$(DOCKER_COMPOSE) up database --build --force-recreate --detach
-
-up-database-test:
-	@$(DOCKER_COMPOSE) -f ./docker-compose-test.yaml up database --build --force-recreate --detach
-
-up-database-dev:
-	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up database --build --force-recreate --detach
-
 start: up install build-db ## Start the docker hub in detached mode (no logs)
 
 install: vendor/composer/installed.json ## Install project
@@ -88,12 +79,12 @@ console:
 	@$(CONSOLE) $(c) --env=$(ENV)
 
 build-db: ## Build database
-	@$(CONSOLE) doctrine:database:create --if-not-exists --env=$(ENV)
-	@$(CONSOLE) doctrine:migrations:migrate -n --env=$(ENV)
-	@#$(CONSOLE) messenger:setup-transports -n --env=$(ENV)
+#	@$(CONSOLE) doctrine:database:create --if-not-exists --env=$(ENV)
+#	@$(CONSOLE) doctrine:migrations:migrate -n --env=$(ENV)
+#	@$(CONSOLE) messenger:setup-transports -n --env=$(ENV)
 
 seed:
-	@$(CONSOLE) doctrine:fixtures:load -n --env=$(ENV)
+	@#$(CONSOLE) doctrine:fixtures:load -n --env=$(ENV)
 
 clear-cache:
 	@$(CONSOLE) cache:clear --env=$(ENV)
@@ -103,12 +94,14 @@ rebuild-db: remove-db build-db seed
 remove-db:
 	@#$(CONSOLE) doctrine:database:drop --force --if-exists --env=$(ENV)
 
-test-%: ENV=dev
+test-%: ENV=ci
 test: test-functional
 test-functional: clear-cache rebuild-db seed ## Run functional tests (with db reload)
 	#$(PHPUNIT) --testdox
 
 test-rebuild-db: rebuild-db
+
+
 
 ## —— Codestyle 🔍  ————————————————————————————————————————————————————————————————
 codestyle: ## Fix codestyle issues
@@ -158,7 +151,6 @@ k8s-deploy-dev:
 	kubectl apply -f ./k8s/homebase-backend-phpfpm
 
 k8s-deploy-test:
-	-kubectl delete -f ./k8s/homebase-backend-phpfpm-test/homebase-backend-migration.yaml -n $(K8S_NAMESPACE)
 	kubectl apply -f ./k8s/homebase-backend-phpfpm-test -n $(K8S_NAMESPACE)
 	# Enforce restart for the pods
 	kubectl rollout restart -f ./k8s/homebase-backend-phpfpm-test/homebase-backend-deployment.yaml -n $(K8S_NAMESPACE)
