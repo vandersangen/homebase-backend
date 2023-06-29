@@ -15,8 +15,6 @@ spec:
 
     spec:
       restartPolicy: Always
-      imagePullSecrets:
-        - name: regcred
 
       initContainers:
         - name: phpfpm-nginx-init

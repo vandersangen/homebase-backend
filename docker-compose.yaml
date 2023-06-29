@@ -5,9 +5,6 @@ services:
   phpfpm:
     image: larsvandersangen/homebase-backend
     platform: linux/amd64
-    depends_on:
-      database:
-        condition: service_completed_successfully
     build:
       context: .
       target: dev
@@ -19,6 +16,7 @@ services:
       SERVICE_TAGS: dev
     expose:
       - "9000"
+
 
   # Nginx Service
   nginx:
@@ -47,38 +45,11 @@ services:
     entrypoint: ng serve --host 0.0.0.0 --poll 1
 
 
-  ###> doctrine/doctrine-bundle ###
-  database:
-    image: mysql:8.0.33
-    networks:
-      - app-network
-    environment:
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: password
-      MYSQL_DATABASE: homebase-dev
-      MYSQL_ROOT_PASSWORD: password
-    volumes:
-      - database_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
-      - "33060:33060"
-    expose:
-      - 3306
-      - 33060
-  ###< doctrine/doctrine-bundle ###
-
   redis:
     image: "redis:latest"
 
 # Docker Networks
-
 networks:
   app-network:
     name: app-network
     driver: bridge
-
-
-volumes:
-  ###> doctrine/doctrine-bundle ###
-  database_data:
-###< doctrine/doctrine-bundle ###
