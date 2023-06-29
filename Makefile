@@ -46,6 +46,15 @@ up-phpfpm-dev:
 up-rebuild: ## Start; --force rebuild
 	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up --build --force-recreate --detach
 
+up-database:
+	@$(DOCKER_COMPOSE) up database --build --force-recreate --detach
+
+up-database-test:
+	@$(DOCKER_COMPOSE) -f ./docker-compose-test.yaml up database --build --force-recreate --detach
+
+up-database-dev:
+	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up database --build --force-recreate --detach
+
 start: up install build-db ## Start the docker hub in detached mode (no logs)
 
 install: vendor/composer/installed.json ## Install project
@@ -96,12 +105,11 @@ remove-db:
 
 test-%: ENV=ci
 test: test-functional
-test-functional: clear-cache rebuild-db seed ## Run functional tests (with db reload)
+#test-functional: clear-cache rebuild-db seed ## Run functional tests (with db reload)
+test-functional: clear-cache seed ## Run functional tests (with db reload)
 	#$(PHPUNIT) --testdox
 
 test-rebuild-db: rebuild-db
-
-
 
 ## —— Codestyle 🔍  ————————————————————————————————————————————————————————————————
 codestyle: ## Fix codestyle issues
