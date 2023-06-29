@@ -28,15 +28,18 @@ jobs:
 
       - name: Setup and test
         run: |
+          # Required for running local install
+          touch .env.local
+          echo APP_ENV=$APP_ENV >> .env.local
+          
           make up-phpfpm-test
           make test
           
-          touch .env.local
-          echo APP_ENV=$APP_ENV >> .env.local
+          # Preperation for artifact
           echo DATABASE_URL=$DATABASE_URL_TEST >> .env.local
         env:
           APP_ENV: prod
-
+|
       - name: Docker compose push
         if: github.ref == 'refs/heads/development'
         run: |
