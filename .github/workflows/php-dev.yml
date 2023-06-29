@@ -39,7 +39,7 @@ jobs:
           echo DATABASE_URL=$DATABASE_URL_TEST >> .env.local
         env:
           APP_ENV: prod
-|
+
       - name: Docker compose push
         if: github.ref == 'refs/heads/development'
         run: |
