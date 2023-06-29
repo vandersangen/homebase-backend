@@ -103,7 +103,7 @@ rebuild-db: remove-db build-db seed
 remove-db:
 	@#$(CONSOLE) doctrine:database:drop --force --if-exists --env=$(ENV)
 
-test-%: ENV=ci
+test-%: ENV=dev
 test: test-functional
 #test-functional: clear-cache rebuild-db seed ## Run functional tests (with db reload)
 test-functional: clear-cache seed ## Run functional tests (with db reload)
