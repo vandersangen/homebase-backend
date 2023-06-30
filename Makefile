@@ -44,7 +44,7 @@ up-phpfpm-test:
 	@$(DOCKER_COMPOSE) -f ./docker-compose-test.yaml up phpfpm nginx --build --force-recreate --detach
 
 up-phpfpm-test-cached:
-	@$(DOCKER_COMPOSE) -f ./docker-compose-test.yaml up phpfpm nginx --detach
+	@$(DOCKER_COMPOSE) -f ./docker-compose-test.yaml up phpfpm nginx --build --detach
 
 up-phpfpm-dev:
 	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up phpfpm nginx --build --force-recreate --detach

@@ -34,16 +34,13 @@ jobs:
           make up-database
           make up-phpfpm
           make test
-          
-          echo DATABASE_URL=$DATABASE_URL_PROD >> .env.local§
         env:
           APP_ENV: prod
 
       - name: Prepare artifact
         run: |
           echo DATABASE_URL=$DATABASE_URL_PROD >> .env.local
-          make up-phpfpm-cached
-
+          make up-phpfpm
         env:
           APP_ENV: prod
 
