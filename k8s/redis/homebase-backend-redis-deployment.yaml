@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homebase-backend-redis-deployment
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      folder: redis
+  template:
+    metadata:
+      labels:
+        folder: redis
+
+    spec:
+      restartPolicy: Always
+
+      containers:
+
+        - name: homebase-backend-redis
+          image: redis:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6379

@@ -69,6 +69,8 @@ services:
 
   redis:
     image: "redis:latest"
+    networks:
+      - app-network
 
 # Docker Networks
 
