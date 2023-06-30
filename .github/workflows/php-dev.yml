@@ -39,7 +39,7 @@ jobs:
 
       - name: Prepare artifact
         run: |
-          echo DATABASE_URL=$DATABASE_URL_TEST >> .env.local
+          echo DATABASE_URL=${{secrets.DATABASE_URL_TEST}} >> .env.local
           make up-phpfpm-test
         env:
           APP_ENV: prod

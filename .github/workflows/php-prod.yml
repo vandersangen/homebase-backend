@@ -39,7 +39,7 @@ jobs:
 
       - name: Prepare artifact
         run: |
-          echo DATABASE_URL=$DATABASE_URL_PROD >> .env.local
+          echo DATABASE_URL=${{secrets.DATABASE_URL_PROD}} >> .env.local
           make up-phpfpm
         env:
           APP_ENV: prod
