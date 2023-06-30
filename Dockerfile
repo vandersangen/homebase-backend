@@ -46,6 +46,10 @@ RUN docker-php-ext-install pdo_mysql mysqli
 #RUN docker-php-ext-install file_info
 #RUN docker-php-ext-install zlib # phpize
 
+# Add Redis (latest)
+RUN pecl install redis \
+    && docker-php-ext-enable redis \
+
 # Install compose & packages
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
