@@ -7,11 +7,11 @@ spec:
 
   selector:
     matchLabels:
-      folder: redis-test
+      folder: redis
   template:
     metadata:
       labels:
-        folder: redis-test
+        folder: redis
 
     spec:
       restartPolicy: Always
