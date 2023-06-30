@@ -24,4 +24,4 @@ spec:
             - /bin/sh
             - -c
           args:
-            - "/var/www/homebase-backend/bin/console doctrine:migrations:migrate -n && make seed"
+            - "/var/www/homebase-backend/bin/console doctrine:migrations:migrate -n && /var/www/homebase-backend/bin/console doctrine:fixtures:load -n"
