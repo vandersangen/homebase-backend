@@ -41,7 +41,7 @@ jobs:
       - name: Prepare artifact
         run: |
           echo DATABASE_URL=$DATABASE_URL_TEST >> .env.local
-          make up-phpfpm-test
+          make up-phpfpm-test-cached
         env:
           APP_ENV: prod
 
