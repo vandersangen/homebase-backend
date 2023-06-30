@@ -37,14 +37,29 @@ up: ## Start the docker hub in detached mode (no logs)
 up-phpfpm:
 	@$(DOCKER_COMPOSE) up phpfpm nginx --build --force-recreate --detach
 
+up-phpfpm-cached:
+	@$(DOCKER_COMPOSE) up phpfpm nginx --detach
+
 up-phpfpm-test:
 	@$(DOCKER_COMPOSE) -f ./docker-compose-test.yaml up phpfpm nginx --build --force-recreate --detach
+
+up-phpfpm-test-cached:
+	@$(DOCKER_COMPOSE) -f ./docker-compose-test.yaml up phpfpm nginx --build --detach
 
 up-phpfpm-dev:
 	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up phpfpm nginx --build --force-recreate --detach
 
 up-rebuild: ## Start; --force rebuild
 	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up --build --force-recreate --detach
+
+up-database:
+	@$(DOCKER_COMPOSE) up database --build --force-recreate --detach
+
+up-database-test:
+	@$(DOCKER_COMPOSE) -f ./docker-compose-test.yaml up database --build --force-recreate --detach
+
+up-database-dev:
+	@$(DOCKER_COMPOSE) -f ./docker-compose-dev.yaml up database --build --force-recreate --detach
 
 start: up install build-db ## Start the docker hub in detached mode (no logs)
 
@@ -79,12 +94,12 @@ console:
 	@$(CONSOLE) $(c) --env=$(ENV)
 
 build-db: ## Build database
-#	@$(CONSOLE) doctrine:database:create --if-not-exists --env=$(ENV)
-#	@$(CONSOLE) doctrine:migrations:migrate -n --env=$(ENV)
-#	@$(CONSOLE) messenger:setup-transports -n --env=$(ENV)
+	@$(CONSOLE) doctrine:database:create --if-not-exists --env=$(ENV)
+	@$(CONSOLE) doctrine:migrations:migrate -n --env=$(ENV)
+	@#$(CONSOLE) messenger:setup-transports -n --env=$(ENV)
 
 seed:
-	@#$(CONSOLE) doctrine:fixtures:load -n --env=$(ENV)
+	@$(CONSOLE) doctrine:fixtures:load -n --env=$(ENV)
 
 clear-cache:
 	@$(CONSOLE) cache:clear --env=$(ENV)
@@ -94,14 +109,12 @@ rebuild-db: remove-db build-db seed
 remove-db:
 	@#$(CONSOLE) doctrine:database:drop --force --if-exists --env=$(ENV)
 
-test-%: ENV=ci
+test-%: ENV=dev
 test: test-functional
 test-functional: clear-cache rebuild-db seed ## Run functional tests (with db reload)
 	#$(PHPUNIT) --testdox
 
 test-rebuild-db: rebuild-db
-
-
 
 ## —— Codestyle 🔍  ————————————————————————————————————————————————————————————————
 codestyle: ## Fix codestyle issues
@@ -151,14 +164,18 @@ k8s-deploy-dev:
 	kubectl apply -f ./k8s/homebase-backend-phpfpm
 
 k8s-deploy-test:
+	-kubectl delete -f ./k8s/homebase-backend-phpfpm-test/homebase-backend-migration.yaml -n $(K8S_NAMESPACE)
 	kubectl apply -f ./k8s/homebase-backend-phpfpm-test -n $(K8S_NAMESPACE)
+	kubectl apply -f ./k8s/redis -n $(K8S_NAMESPACE)
 	# Enforce restart for the pods
 	kubectl rollout restart -f ./k8s/homebase-backend-phpfpm-test/homebase-backend-deployment.yaml -n $(K8S_NAMESPACE)
 	kubectl apply -f ./k8s/ingress-test -n $(K8S_NAMESPACE)
 	kubectl apply -f ./k8s/certmanager-test -n $(K8S_NAMESPACE)
 
 k8s-deploy-prod:
+	-kubectl delete -f ./k8s/homebase-backend-phpfpm-prod/homebase-backend-migration.yaml -n $(K8S_NAMESPACE)
 	kubectl apply -f ./k8s/homebase-backend-phpfpm-prod -n $(K8S_NAMESPACE)
+	kubectl apply -f ./k8s/redis -n $(K8S_NAMESPACE)
 	# Enforce restart for the pods
 	kubectl rollout restart -f ./k8s/homebase-backend-phpfpm-prod/homebase-backend-deployment.yaml -n $(K8S_NAMESPACE)
 	kubectl apply -f ./k8s/ingress-prod -n $(K8S_NAMESPACE)
