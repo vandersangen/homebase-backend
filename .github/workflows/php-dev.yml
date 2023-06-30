@@ -40,26 +40,28 @@ jobs:
       - name: Prepare artifact
         run: |
           echo DATABASE_URL=$DATABASE_URL_TEST >> .env.local
+          echo REDIS_URL=$REDIS_URL
           make up-phpfpm-test
         env:
           APP_ENV: prod
           DATABASE_URL_TEST: ${{secrets.DATABASE_URL_TEST}}
+          REDIS_URL: ${{secrets.REDIS_URL}}
 
       - name: Docker compose push
-        if: github.ref == 'refs/heads/development'
+#        if: github.ref == 'refs/heads/development'
         run: |
           docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           make docker-push-phpfpm-test
 
       - name: Set k8s kubeconfig file
-        if: github.ref == 'refs/heads/development'
+#        if: github.ref == 'refs/heads/development'
         uses: qgxpagamentos/kubectl-set@v1
         with:
           # A base64 encoded reference to your authorization file (~/.kube/config)
           base64-kube-config: ${{ secrets.K8S_KUBE_CONFIG }}
 
       - name: Deploy to k8s
-        if: github.ref == 'refs/heads/development'
+#        if: github.ref == 'refs/heads/development'
         run: |
           make k8s-deploy-test
         env:
