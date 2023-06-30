@@ -39,12 +39,13 @@ jobs:
 
       - name: Prepare artifact
         run: |
-          echo DATABASE_URL=${{secrets.DATABASE_URL_TEST}} >> .env.local
+          echo DATABASE_URL=$DATABASE_URL_TEST >> .env.local
           cat .env.local
           make up-phpfpm-test
           docker compose exec phpfpm cat .env.local
         env:
           APP_ENV: prod
+          DATABASE_URL_TEST: ${{secrets.DATABASE_URL_TEST}}
 
       - name: Docker compose push
         if: github.ref == 'refs/heads/development'
