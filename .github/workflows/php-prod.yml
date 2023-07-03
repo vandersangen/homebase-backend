@@ -31,8 +31,8 @@ jobs:
           touch .env.local
           echo APP_ENV=$APP_ENV >> .env.local
           
-          make up-database
-          make up-phpfpm
+          make up-database-test
+          make up-phpfpm-test
           make test
         env:
           APP_ENV: prod
