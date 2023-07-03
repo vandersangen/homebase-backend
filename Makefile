@@ -169,6 +169,7 @@ k8s-deploy-test:
 	kubectl apply -f ./k8s/redis -n $(K8S_NAMESPACE)
 	# Enforce restart for the pods
 	kubectl rollout restart -f ./k8s/homebase-backend-phpfpm-test/homebase-backend-deployment.yaml -n $(K8S_NAMESPACE)
+	kubectl rollout restart -f ./k8s/redis/homebase-backend-redis-deployment.yaml -n $(K8S_NAMESPACE)
 	kubectl apply -f ./k8s/ingress-test -n $(K8S_NAMESPACE)
 	kubectl apply -f ./k8s/certmanager-test -n $(K8S_NAMESPACE)
 
@@ -178,5 +179,6 @@ k8s-deploy-prod:
 	kubectl apply -f ./k8s/redis -n $(K8S_NAMESPACE)
 	# Enforce restart for the pods
 	kubectl rollout restart -f ./k8s/homebase-backend-phpfpm-prod/homebase-backend-deployment.yaml -n $(K8S_NAMESPACE)
+	kubectl rollout restart -f ./k8s/redis/homebase-backend-redis-deployment.yaml -n $(K8S_NAMESPACE)
 	kubectl apply -f ./k8s/ingress-prod -n $(K8S_NAMESPACE)
 	kubectl apply -f ./k8s/certmanager-prod -n $(K8S_NAMESPACE)
