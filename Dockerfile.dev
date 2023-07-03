@@ -37,8 +37,8 @@ RUN apt update && \
     rm -rf /var/lib/apt/lists/*
 
 # Install and configurate PHP extensions
-RUN docker-php-ext-install pdo_mysql mysqli
-#RUN docker-php-ext-install openssl # phpize
+RUN docker-php-ext-install pdo_mysql mysqli \
+      opcache
 #RUN docker-php-ext-install phar # needs openssl
 #RUN docker-php-ext-install xml-reader
 #RUN docker-php-ext-install xml-writer
@@ -48,7 +48,7 @@ RUN docker-php-ext-install pdo_mysql mysqli
 
 # Add Redis (latest) and xdebug (latest)
 RUN pecl install redis xdebug && \
-    docker-php-ext-enable redis xdebug
+    docker-php-ext-enable redis xdebug opcache
 
 RUN chmod 666 /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN echo ';zend_extension=xdebug.so' > '/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini'

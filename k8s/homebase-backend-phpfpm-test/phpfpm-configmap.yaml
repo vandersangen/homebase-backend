@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: phpfpm-configmap
+  labels:
+    folder: homebase-backend-phpfpm
+data:
+  custom-php.ini: |
+    opcache.enabled=1
+    opcache.preload=/var/www/html/config/preload.php  
