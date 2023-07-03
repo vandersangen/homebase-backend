@@ -37,8 +37,8 @@ RUN apt update && \
     rm -rf /var/lib/apt/lists/*
 
 # Install and configurate PHP extensions
-RUN docker-php-ext-install pdo_mysql mysqli
-#RUN docker-php-ext-install openssl # phpize
+RUN docker-php-ext-install pdo_mysql mysqli \
+      opcache
 #RUN docker-php-ext-install phar # needs openssl
 #RUN docker-php-ext-install xml-reader
 #RUN docker-php-ext-install xml-writer
