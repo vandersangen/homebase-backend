@@ -53,7 +53,8 @@ spec:
           volumeMounts:
             - mountPath: /var/www
               name: shared-data
-            - mountPath: /usr/local/etc/php/conf.d/
+            - mountPath: /usr/local/etc/php/conf.d/custom-php.ini
+              subPath: custom-php.ini
               name: phpfpm-configmap
 
         - name: homebase-backend-nginx
