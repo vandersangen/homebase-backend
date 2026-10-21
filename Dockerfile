@@ -51,10 +51,13 @@ RUN docker-php-ext-install pdo_mysql mysqli \
 #RUN docker-php-ext-install zlib # phpize
 
 # Add Redis (latest)
-# Extensions via PIE (sources from GitHub): pecl.php.net is unreliable and its REST channel is discontinued.
-COPY --from=ghcr.io/php/pie:bin /pie /usr/bin/pie
-RUN pie install --skip-enable-extension phpredis/phpredis \
-    && docker-php-ext-enable redis opcache
+# phpredis pinned to 6.0.x: symfony/cache 6.3 (Redis6Proxy) is incompatible with phpredis >= 6.1.
+# Built from the GitHub release tarball, since pecl.php.net is unreliable and PIE has no 6.0.x release.
+RUN mkdir -p /usr/src/php/ext/redis \
+    && curl -fsSL https://github.com/phpredis/phpredis/archive/refs/tags/6.0.2.tar.gz | tar xz -C /usr/src/php/ext/redis --strip-components=1 \
+    && echo redis >> /usr/src/php-available-exts \
+    && docker-php-ext-install redis
+RUN docker-php-ext-enable opcache
 
 # Install compose & packages
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

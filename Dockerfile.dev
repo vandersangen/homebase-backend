@@ -51,11 +51,16 @@ RUN docker-php-ext-install pdo_mysql mysqli \
 #RUN docker-php-ext-install zlib # phpize
 
 # Add Redis (latest) and xdebug (latest)
-# Extensions via PIE (sources from GitHub): pecl.php.net is unreliable and its REST channel is discontinued.
+# phpredis pinned to 6.0.x: symfony/cache 6.3 (Redis6Proxy) is incompatible with phpredis >= 6.1.
+# Built from the GitHub release tarball, since pecl.php.net is unreliable and PIE has no 6.0.x release.
+RUN mkdir -p /usr/src/php/ext/redis \
+    && curl -fsSL https://github.com/phpredis/phpredis/archive/refs/tags/6.0.2.tar.gz | tar xz -C /usr/src/php/ext/redis --strip-components=1 \
+    && echo redis >> /usr/src/php-available-exts \
+    && docker-php-ext-install redis
+# Xdebug via PIE (sources from GitHub)
 COPY --from=ghcr.io/php/pie:bin /pie /usr/bin/pie
-RUN pie install --skip-enable-extension phpredis/phpredis && \
-    pie install --skip-enable-extension xdebug/xdebug && \
-    docker-php-ext-enable redis xdebug opcache
+RUN pie install --skip-enable-extension xdebug/xdebug && \
+    docker-php-ext-enable xdebug opcache
 
 RUN chmod 666 /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN echo ';zend_extension=xdebug.so' > '/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini'
