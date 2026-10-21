@@ -1,5 +1,9 @@
 FROM php:8.2-fpm as dev
 
+# Security hotfix (CVE-2026-109618/109619): upload-progress tracking is not used anywhere,
+# so switch it off to close the reported session.upload_progress attack path.
+RUN echo "session.upload_progress.enabled = Off" > /usr/local/etc/php/conf.d/zz-security.ini
+
 # Install dependencies
 RUN apt update && \
     apt upgrade -y && \
@@ -47,7 +51,9 @@ RUN docker-php-ext-install pdo_mysql mysqli \
 #RUN docker-php-ext-install zlib # phpize
 
 # Add Redis (latest)
-RUN pecl install redis \
+# Extensions via PIE (sources from GitHub): pecl.php.net is unreliable and its REST channel is discontinued.
+COPY --from=ghcr.io/php/pie:bin /pie /usr/bin/pie
+RUN pie install --skip-enable-extension phpredis/phpredis \
     && docker-php-ext-enable redis opcache
 
 # Install compose & packages
