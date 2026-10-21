@@ -51,7 +51,9 @@ RUN docker-php-ext-install pdo_mysql mysqli \
 #RUN docker-php-ext-install zlib # phpize
 
 # Add Redis (latest)
-RUN pecl install redis \
+# Extensions via PIE (sources from GitHub): pecl.php.net is unreliable and its REST channel is discontinued.
+COPY --from=ghcr.io/php/pie:bin /pie /usr/bin/pie
+RUN pie install --skip-enable-extension phpredis/phpredis \
     && docker-php-ext-enable redis opcache
 
 # Install compose & packages
