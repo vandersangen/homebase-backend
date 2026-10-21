@@ -1,5 +1,9 @@
 FROM php:8.2-fpm as dev
 
+# Security hotfix (CVE-2026-109618/109619): upload-progress tracking is not used anywhere,
+# so switch it off to close the reported session.upload_progress attack path.
+RUN echo "session.upload_progress.enabled = Off" > /usr/local/etc/php/conf.d/zz-security.ini
+
 # Install dependencies
 RUN apt update && \
     apt upgrade -y && \
