@@ -9,6 +9,13 @@ data:
     
     # Default server definition
     server {
+        # Security hotfix (CVE-2026-109618/109619), temporary: the reported bugs sit in PHP's multipart
+        # parsing, before any app code runs, so multipart requests must never reach PHP-FPM.
+        # Remove once the patched PHP image is deployed.
+        if ($http_content_type ~* "multipart") {
+            return 403;
+        }
+
         error_log  /var/log/nginx/error.log;
         access_log /var/log/nginx/access.log;
 
