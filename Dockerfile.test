@@ -1,4 +1,4 @@
-FROM php:8.2-fpm as dev
+FROM php:8.2.35-fpm as dev
 
 # Security hotfix (CVE-2026-109618/109619): upload-progress tracking is not used anywhere,
 # so switch it off to close the reported session.upload_progress attack path.
