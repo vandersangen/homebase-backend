@@ -58,7 +58,7 @@ spec:
               name: phpfpm-configmap
 
         - name: homebase-backend-nginx
-          image: nginx:alpine
+          image: nginx:1.31.9-alpine
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
